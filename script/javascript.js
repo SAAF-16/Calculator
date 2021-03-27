@@ -37,43 +37,37 @@ operatorsDiv.addEventListener('click', e => {
     updateScreen();
 });
 
+numbersDiv.addEventListener('keydown', (e) => {
+    if (e.key == 'Enter') e.preventDefault();
+});
 numbersDiv.addEventListener('click', (e) => {
-    if (calcScreenTop.textContent.slice(-1) == '=') {
-        resetCalculator();
-    }
-    if (e.target.textContent == 'x10') {
-        activeNumber = (activeNumber * 10).toString();
-        updateScreen();
-        return false;
-    }
-    if (e.target.textContent == '√')
-        if (notButton(e)) return false;
+    console.log(e);
+    if (calcScreenTop.textContent.slice(-1) == '=') resetCalculator();
+    if (notButton(e)) return false;
     if (doublePoint(e.target.textContent)) return false;
     if (resultKeys.includes(e.target.textContent)) {
+        console.log('sto qua');
         finalResult();
-        updateScreen();
-        return false;
     }
-    lastDigit = activeNumber.slice(-1);
-    if (isOperator.test(lastDigit)) {
-        //case factorial 
-        calcScreenTop.textContent = activeNumber;
-        activeNumber = '';
-        console.log(activeNumber);
-    }
+    else if (isNumber.test(e.target.id)) {
+        lastDigit = activeNumber.slice(-1);
 
 
-    if (activeNumber == "0") activeNumber = "";
-    console.log(e.target.textContent);
-    activeNumber += e.target.textContent;
+        if (e.target.textContent == 'x10') {
+            activeNumber = (activeNumber * 10).toString();
+        } else if (isOperator.test(lastDigit)) {
+            calcScreenTop.textContent = activeNumber;
+            activeNumber = '';
+        }
+        if (activeNumber == "0") activeNumber = "";
+        activeNumber += e.target.textContent;
+    }
     updateScreen();
 });
 
 window.addEventListener("keydown", e => {
     // console.log(e.key);
-    if (calcScreenTop.textContent.slice(-1) == '=') {
-        resetCalculator();
-    }
+    if (calcScreenTop.textContent.slice(-1) == '=') resetCalculator();
     if (doublePoint(e.key)) return false;
     if (isDeleteKey(e.key)) deleteDigit();
     if (resultKeys.includes(e.key)) finalResult();
@@ -83,27 +77,18 @@ window.addEventListener("keydown", e => {
         if (calcScreenTop.textContent != "") {
             nextResultCalculation(e.key);
             updateScreen();
-
             return false;
         }
         updateOperation(e.key);
-
-
-        /*       console.log(operandone)
-              console.log(operator()) */
-
     }
 
     else if (!(isNumber.test((e.key)))) return false;
 
     else {
-        if (doublePoint(e.key)) return false;
         lastDigit = activeNumber.slice(-1);
         if (isOperator.test(lastDigit)) {
-            //case factorial 
             calcScreenTop.textContent = activeNumber;
             activeNumber = '';
-            console.log(activeNumber);
         }
         if (activeNumber == "0") activeNumber = "";
         activeNumber += e.key;
@@ -132,6 +117,7 @@ window.addEventListener("keydown", e => {
 function finalResult() {
     operandtwo = activeNumber;
     if (operator == sqrt) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + '^(1/' + operandtwo + ')=';
+    else if (operator == mod) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + 'mod' + operandtwo + '=';
     else calcScreenTop.textContent += operandtwo + '=';
     activeNumber = operate(+operandone, operator, +operandtwo);
 }
