@@ -21,10 +21,11 @@ updateScreen();
 operatorsDiv.addEventListener('click', e => {
     if (notButton(e)) return false;         //if i'm not clicking a button 
     if (isDeleteKey(e.target.id)) deleteDigit();
-    if(e.target.id=='ac'){
-        activeNumber="0"
-        updateScreen()
-         return false}
+    if (e.target.id == 'ac') {
+        activeNumber = "0";
+        updateScreen();
+        return false;
+    }
 
     else if (calcScreenTop.textContent != "") {
         nextResultCalculation(e.target.id);
@@ -37,22 +38,22 @@ operatorsDiv.addEventListener('click', e => {
 });
 
 numbersDiv.addEventListener('click', (e) => {
-    if(calcScreenTop.textContent.slice(-1)=='='){
+    if (calcScreenTop.textContent.slice(-1) == '=') {
         resetCalculator();
     }
-    if(e.target.textContent=='x10'){
-        activeNumber=(activeNumber*10).toString()
-        updateScreen()
-        return false
+    if (e.target.textContent == 'x10') {
+        activeNumber = (activeNumber * 10).toString();
+        updateScreen();
+        return false;
     }
-    if(e.target.textContent=='√')
-    if (notButton(e)) return false;
+    if (e.target.textContent == '√')
+        if (notButton(e)) return false;
     if (doublePoint(e.target.textContent)) return false;
-    if(resultKeys.includes(e.target.textContent)){
+    if (resultKeys.includes(e.target.textContent)) {
         finalResult();
         updateScreen();
-        return false
-    } 
+        return false;
+    }
     lastDigit = activeNumber.slice(-1);
     if (isOperator.test(lastDigit)) {
         //case factorial 
@@ -69,13 +70,13 @@ numbersDiv.addEventListener('click', (e) => {
 });
 
 window.addEventListener("keydown", e => {
-   // console.log(e.key);
-    if(calcScreenTop.textContent.slice(-1)=='='){
+    // console.log(e.key);
+    if (calcScreenTop.textContent.slice(-1) == '=') {
         resetCalculator();
     }
     if (doublePoint(e.key)) return false;
     if (isDeleteKey(e.key)) deleteDigit();
-    if(resultKeys.includes(e.key)) finalResult();
+    if (resultKeys.includes(e.key)) finalResult();
 
 
     else if (isOperator.test(e.key)) {
@@ -130,7 +131,7 @@ window.addEventListener("keydown", e => {
 
 function finalResult() {
     operandtwo = activeNumber;
-    if(operator==sqrt)calcScreenTop.textContent =calcScreenTop.textContent.slice(0,-1)+'^(1/'+operandtwo + ')=';
+    if (operator == sqrt) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + '^(1/' + operandtwo + ')=';
     else calcScreenTop.textContent += operandtwo + '=';
     activeNumber = operate(+operandone, operator, +operandtwo);
 }
