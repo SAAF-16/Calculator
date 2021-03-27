@@ -1,116 +1,109 @@
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
-:root{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
-#calculator{
-    border:solid black;
-    border-radius: 20px;
-    padding: 10px;
-    background-color: rgb(110, 110, 110);
-    height: 650px;
-    width: 420px;
-    margin: 50px auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+#calculator {
+  border: solid black;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: rgb(110, 110, 110);
+  height: 650px;
+  width: 420px;
+  margin: 50px auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
-button{
-    font-size: 30px;
-    outline: none;
-    border-radius: 50%;
+button {
+  font-size: 30px;
+  outline: none;
+  border-radius: 50%;
 }
-#under-screen{
+#under-screen {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 5px;
+}
+#calcScreen {
+  border: solid black;
+  padding: 10px;
+  font-size: 44px;
+  overflow-x: scroll;
+  text-align: right;
+  margin: 60px 10px 20px 10px;
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  height: 100px;
+  width: 100%;
 
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 5px;
-
-}
-#calcScreen{
-    border: solid black;
-    padding:10px;
-    font-size: 44px;
-    scrollbar-color: rgb(240, 239, 238);;
-    overflow-x: scroll;
-    direction: rtl;
- 
-    margin: 60px 10px 20px 10px;
-    border-radius: 20px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    height: 100px;
-    width: 100%;
-
-    background-color: rgb(240, 239, 238);
+  background-color: rgb(240, 239, 238);
 }
 
-      
-        /* Designing for scroll-bar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-      
-
-      
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            height: 1px;
-            background: grey;
-            border-radius: 5px;
-        }
-      
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-
-
-#operators-div,#numbers-div{
-    width: 40%;
-    height: 60%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    
-}
-#numbers-div{
-    width: 60%;
-}
-.numbers{
-    text-align: center;
-    vertical-align: middle;
-    line-height: 70px;  
-    height: 70px;
-    width: 70px;
-    background-color: rgb(162, 162, 162);
-    color:white
+/* Designing for scroll-bar */
+::-webkit-scrollbar {
+  height: 9px;
 }
 
-.operators{
-    text-align: center;
-    vertical-align: middle;
-    line-height: 70px;
-    height: 70px;
-    width: 70px;
-    background-color:rgb(186, 38, 38);
-    color:orange
+/* Handle */
+::-webkit-scrollbar-thumb {
+  height: 1px;
+  background: grey;
+  border-radius: 5px;
 }
-#result{
-    border-radius: 20px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 70px;
-    width: 90%;
-    height: 70px;
-    background-color:rgb(186, 38, 38);
-    color: white;
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
-#ac,#del{
-    border-radius: 20px;
+
+#operators-div,
+#numbers-div {
+  width: 40%;
+  height: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+#numbers-div {
+  width: 60%;
+}
+.numbers {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 70px;
+  height: 70px;
+  width: 70px;
+  background-color: rgb(162, 162, 162);
+  color: white;
+}
+
+.operators {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 70px;
+  height: 70px;
+  width: 70px;
+  background-color: rgb(186, 38, 38);
+  color: orange;
+}
+#result {
+  border-radius: 20px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 70px;
+  width: 90%;
+  height: 70px;
+  background-color: rgb(186, 38, 38);
+  color: white;
+}
+#ac,
+#del {
+  border-radius: 20px;
 }
