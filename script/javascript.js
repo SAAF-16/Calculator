@@ -18,7 +18,8 @@ const operatorsDiv = document.getElementById('operators-div');
 operatorsDiv.addEventListener('click', manageOperatorsButtons());
 numbersDiv.addEventListener('click', manageNumbersButtons());
 numbersDiv.addEventListener('keydown', avoidEnterKeyDefault());
-window.addEventListener("keydown", manageKeyboardBehaviour());
+window.addEventListener('keydown', keyboardToButtonManager())
+/* window.addEventListener("keydown", manageKeyboardBehaviour()); */
 
 updateScreen();
 
@@ -26,34 +27,44 @@ updateScreen();
 
 
 
-function manageKeyboardBehaviour() {
-    return e => {
-        if (calcScreenTop.textContent.slice(-1) == '=') resetCalculator();
-        if (doublePoint(e.key)) return false;
-        if (isDeleteKey(e.key)) deleteDigit();
-        else if (resultKeys.includes(e.key)) finalResult();
 
-        else if (isOperator.test(e.key)) {
-            if (calcScreenTop.textContent != "") {
-                nextResultCalculation(e.key);
-                updateScreen();
-                return false;
-            }
-            updateOperation(e.key);
+function keyboardToButtonManager() {
+    return (e) => {
+        switch (true) {
+            case (e.key == '0'): clickButton('num-0'); break;
+            case (e.key == '1'): clickButton('num-1'); break;
+            case (e.key == '2'): clickButton('num-2'); break;
+            case (e.key == '3'): clickButton('num-3'); break;
+            case (e.key == '4'): clickButton('num-4'); break;
+            case (e.key == '5'): clickButton('num-5'); break;
+            case (e.key == '6'): clickButton('num-6'); break;
+            case (e.key == '7'): clickButton('num-7'); break;
+            case (e.key == '8'): clickButton('num-8'); break;
+            case (e.key == '9'): clickButton('num-9'); break;
+            case (e.key == '.'): clickButton('num-.'); break;
+            case (e.key == '/'): clickButton('÷'); break;
+            case (e.key == '*'): clickButton('×'); break;
+            case (e.key == '-'): clickButton('-'); break;
+            case (e.key == '+'): clickButton('+'); break;
+            case (e.key == '!'): clickButton('!'); break;
+            case (e.key == '%'): clickButton('%'); break;
+            case (e.key == '^'): clickButton('^'); break;
+            case (isResultKey(e.key)): clickButton('result'); break;
+            case (isDeleteKey(e.key)): clickButton('del'); break;
         }
-        else if (!(isNumber.test((e.key)))) return false;
-
-        else {
-            lastDigit = activeNumber.slice(-1);
-            if (isOperator.test(lastDigit)) {
-                calcScreenTop.textContent = activeNumber;
-                activeNumber = '';
-            }
-            if (activeNumber == "0") activeNumber = "";
-            activeNumber += e.key;
-        }
-        updateScreen();
     };
+}
+
+function clickButton(x) {
+    document.getElementById(x).click();
+    document.getElementById(x).classList.add("active")
+    addEventListener('keyup', ()=>{
+        document.getElementById(x).classList.remove("active")
+    })
+}
+
+function isResultKey(e) {
+    return resultKeys.includes(e);
 }
 
 function manageNumbersButtons() {
@@ -102,6 +113,7 @@ function avoidEnterKeyDefault() {
 
 function finalResult() {
     operandtwo = activeNumber;
+
     if (operator == sqrt) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + '^(1/' + operandtwo + ')=';
     else if (operator == mod) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + 'mod' + operandtwo + '=';
     else calcScreenTop.textContent += operandtwo + '=';
@@ -128,7 +140,8 @@ function nextResultCalculation(e) {
 }
 
 function updateOperation(e) {
-    operandone = activeNumber;
+    if(operandone!="") operandone=activeNumber.slice(0,-1) //if i'ts not the first assignaton remove the operator at the end
+    else operandone = activeNumber;
     operator = pressedOperator(e)();
     showLastPressedOperator(e);
 }
@@ -145,7 +158,7 @@ function showLastPressedOperator(e) {
 
 function generateOperatorSimbol(e) {
     operatorSimbol = e;
-    convertDivMul();
+   // convertDivMul();
 }
 
 function convertDivMul() {
@@ -162,8 +175,8 @@ function pressedOperator(e) {
             case (e == '√'): return sqrt;
             case (e == '%'): return mod;
             case (e == '^'): return power;
-            case (e == '/'): return division;
-            case (e == '*'): return multiply;
+            case (e == '÷'): return division;
+            case (e == '×'): return multiply;
             case (e == '-'): return subtract;
             case (e == '+'): return addition;
         }
@@ -193,6 +206,7 @@ function updateScreen() {
 }
 
 function operate(op1, operator, op2) {
+    if(operator=="")return activeNumber
     return operator(op1, op2);
 }
 
