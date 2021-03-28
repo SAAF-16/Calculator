@@ -6,20 +6,20 @@ let operatorSimbol = "";
 
 let isNumber = /[0-9\.]/;  //RegEx to identify if it's a number
 let isOperator = /[/*\-\+%!^÷×√]/; //RegEx to identify if it's an operator
+let isSpecial = /[%!√^]/;
 let deleteKeys = ['Backspace', 'Delete', 'del'];
 let resultKeys = ['Enter', '='];
 
 const calcScreenBottom = document.getElementById('calcScreenBottom');
 const calcScreenTop = document.getElementById('calcScreenTop');
-const underScreen = document.getElementById('under-screen');
 const numbersDiv = document.getElementById('numbers-div');
 const operatorsDiv = document.getElementById('operators-div');
 
 operatorsDiv.addEventListener('click', manageOperatorsButtons());
 numbersDiv.addEventListener('click', manageNumbersButtons());
 numbersDiv.addEventListener('keydown', avoidEnterKeyDefault());
-window.addEventListener('keydown', keyboardToButtonManager())
-/* window.addEventListener("keydown", manageKeyboardBehaviour()); */
+window.addEventListener('keydown', keyboardToButtonManager());
+window.addEventListener('mousedown', avoidMouseDefault());
 
 updateScreen();
 
@@ -27,6 +27,12 @@ updateScreen();
 
 
 
+
+function avoidMouseDefault() {
+    return (e) => {
+        e.preventDefault();
+    };
+}
 
 function keyboardToButtonManager() {
     return (e) => {
@@ -57,10 +63,10 @@ function keyboardToButtonManager() {
 
 function clickButton(x) {
     document.getElementById(x).click();
-    document.getElementById(x).classList.add("active")
-    addEventListener('keyup', ()=>{
-        document.getElementById(x).classList.remove("active")
-    })
+    document.getElementById(x).classList.add("active");
+    addEventListener('keyup', () => {
+        document.getElementById(x).classList.remove("active");
+    });
 }
 
 function isResultKey(e) {
@@ -69,18 +75,27 @@ function isResultKey(e) {
 
 function manageNumbersButtons() {
     return (e) => {
+        lastDigit = activeNumber.slice(-1);
+        if ((calcScreenTop.textContent.slice(-1) == '=') && e.target.id == 'result') {
+            if (isSpecial.test(operatorSimbol) || activeNumber == '0') return false;
+            calcScreenTop.textContent = `${activeNumber}${operatorSimbol}${operandtwo}=`;
+            activeNumber = operate(+activeNumber, operator, +operandtwo).toString();
+            updateScreen();
+
+            return false;
+        }
         if (calcScreenTop.textContent.slice(-1) == '=') resetCalculator();
         if (notButton(e)) return false;
         if (doublePoint(e.target.textContent)) return false;
         if (resultKeys.includes(e.target.textContent)) finalResult();
         else if (isNumber.test(e.target.id)) {
-            lastDigit = activeNumber.slice(-1);
+
             if (e.target.textContent == 'x10') {
                 activeNumber = (activeNumber * 10).toString();
             }
             else if (isOperator.test(lastDigit)) {
                 calcScreenTop.textContent = activeNumber;
-                activeNumber = '';
+                activeNumber = '0';
             }
             if (activeNumber == "0") activeNumber = "";
             activeNumber += e.target.textContent;
@@ -92,10 +107,11 @@ function manageNumbersButtons() {
 function manageOperatorsButtons() {
     return e => {
         if (notButton(e)) return false; //if i'm not clicking a button 
-        if (isDeleteKey(e.target.id)) deleteDigit();
+        else if (isDeleteKey(e.target.id)) deleteDigit();
         else if (e.target.id == 'ac') {
             activeNumber = "0";
         }
+        else if (calcScreenTop.textContent.slice(-1) == '=') ansHandler(e);
         else if (calcScreenTop.textContent != "") {
             nextResultCalculation(e.target.id);
         } else {
@@ -105,9 +121,18 @@ function manageOperatorsButtons() {
     };
 }
 
+function ansHandler(e) {
+    calcScreenTop.textContent = "";
+    activeNumber += e.target.id;
+    updateOperation(e.target.id);
+}
+
 function avoidEnterKeyDefault() {
     return (e) => {
-        if (e.key == 'Enter') e.preventDefault();
+        if (e.key == 'Enter') {
+            e.preventDefault();
+            return false;
+        }
     };
 }
 
@@ -117,7 +142,9 @@ function finalResult() {
     if (operator == sqrt) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + '^(1/' + operandtwo + ')=';
     else if (operator == mod) calcScreenTop.textContent = calcScreenTop.textContent.slice(0, -1) + 'mod' + operandtwo + '=';
     else calcScreenTop.textContent += operandtwo + '=';
-    activeNumber = operate(+operandone, operator, +operandtwo);
+    if (typeof (operandone) == 'number') operandone = operandone.toString();
+    if (isOperator.test(operandone.slice(-1))) operandone = operandone.slice(0, -1);
+    activeNumber = operate(+operandone, operator, +operandtwo).toString();
 }
 
 function resetCalculator() {
@@ -140,8 +167,8 @@ function nextResultCalculation(e) {
 }
 
 function updateOperation(e) {
-    if(operandone!="") operandone=activeNumber.slice(0,-1) //if i'ts not the first assignaton remove the operator at the end
-    else operandone = activeNumber;
+/*     if (operandone != "") operandone = activeNumber.slice(0, -1); //if i'ts not the first assignaton remove the operator at the end
+    else */ operandone = activeNumber;
     operator = pressedOperator(e)();
     showLastPressedOperator(e);
 }
@@ -158,14 +185,6 @@ function showLastPressedOperator(e) {
 
 function generateOperatorSimbol(e) {
     operatorSimbol = e;
-   // convertDivMul();
-}
-
-function convertDivMul() {
-    if (operatorSimbol == '/')
-        operatorSimbol = '÷';
-    if (operatorSimbol == '*')
-        operatorSimbol = '×';
 }
 
 function pressedOperator(e) {
@@ -206,7 +225,7 @@ function updateScreen() {
 }
 
 function operate(op1, operator, op2) {
-    if(operator=="")return activeNumber
+    if (operator == "") return activeNumber;
     return operator(op1, op2);
 }
 
