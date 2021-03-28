@@ -91,14 +91,17 @@ function manageNumbersButtons() {
         else if (isNumber.test(e.target.id)) {
 
             if (e.target.textContent == 'x10') {
-                activeNumber = (activeNumber * 10).toString();
+                activeNumber = (+activeNumber * 10).toString();
+
             }
             else if (isOperator.test(lastDigit)) {
                 calcScreenTop.textContent = activeNumber;
                 activeNumber = '0';
             }
-            if (activeNumber == "0") activeNumber = "";
-            activeNumber += e.target.textContent;
+            if (e.target.textContent != 'x10') {        //avoid bug when pressing x10 and there's 0
+                if (activeNumber == "0") activeNumber = "";
+                activeNumber += e.target.textContent;
+            }
         }
         updateScreen();
     };
